@@ -1,3 +1,6 @@
+# ignore parsed file
+parser
+
 # Prerequisites
 *.d
 

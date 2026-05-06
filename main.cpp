@@ -7,7 +7,7 @@ int main() {
     std::ifstream file("test_data.txt");
 
     //check if file is successfully opend
-    if (!file.is_open()){
+    if(!file.is_open()){
         std::cout << "Error opening file" << std::endl;
         return 1;
     }
@@ -15,10 +15,16 @@ int main() {
     //buffer
     std::string s;
     
+    int buyCount = 0;
     // read file
-    while(std::getline(file, s));
-
+    while(std::getline(file, s)){
+        if(s.find("54=1") != std::string::npos) {
+            buyCount ++;
+        }
+    }
+    std::cout << "buyCount = " << buyCount << std::endl;
     file.close();
     return 0;
 }
 
+ 
