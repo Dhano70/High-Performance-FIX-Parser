@@ -5,7 +5,6 @@ This script generates synthetic financial messages following the FIX 4.2 protoco
 It creates a dataset of 100,000 orders for ASML stock to be used as a 
 benchmark for a high-performance C++ parser.
 
-Usage: python3 generate_data.py
 Output: test_data.txt
 """
 
