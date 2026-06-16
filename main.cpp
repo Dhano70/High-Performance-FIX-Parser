@@ -6,7 +6,6 @@
 #include <unistd.h>
 
 int main() {
-    //open file
     int fd = open("test_data.txt", O_RDONLY);
     if(fd == -1){
         std::cout << "Error opening file" << std::endl;
@@ -44,7 +43,8 @@ int main() {
 
     std::cout << "buyCount = " << buyCount << std::endl;
 
-    //close fd and unmap memory when done 
+    munmap(data, fileSize);
+    close(fd);
 
     return 0;
 }
