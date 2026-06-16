@@ -14,13 +14,13 @@ int main() {
     }
 
     //retrieve file size
-    struct stat sBuff;
-    if (fstat(fd, &sBuff) == -1) {
+    struct stat fileStat;
+    if (fstat(fd, &fileStat) == -1) {
         std::cout << "Error getting file stats" << std::endl;
         close(fd);
         return 1;
     }
-    size_t fileSize = sBuff.st_size;
+    size_t fileSize = fileStat.st_size;
 
     //map file into process memory
     char* data = (char*)mmap(nullptr, fileSize, PROT_READ, MAP_PRIVATE, fd, 0);
@@ -36,16 +36,3 @@ int main() {
 
     return 0;
 }
-
-/*NEXT TIME WORK ON!
-Specifically, we will:
-
-Pointer Arithmetic: We’ll learn how to "jump" straight to the data we want 
-instead of scanning every character
-
-The Memory Walk: Loop through your char* data pointer byte-by-byte.
-
-Pointer Match: Write a super-fast if check for the sequence '5','4','=','1'.
-
-The Benchmark: Time it against your first version to see the massive speed increase.
-*/
