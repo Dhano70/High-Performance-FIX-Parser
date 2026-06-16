@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <chrono>
 
 int main() {
     int fd = open("test_data.txt", O_RDONLY);
@@ -36,6 +37,9 @@ int main() {
     std::cout << "Successfully mapped " << fileSize << " bytes." << std::endl;
 
     int buyCount = 0;
+
+    auto start = std::chrono::high_resolution_clock::now();
+
     for (size_t i = 0; i < fileSize - 4; ++i) {
         if (data[i] == '5' && data[i+1] == '4' && 
             data[i+2] == '=' && data[i+3] == '1') {
@@ -44,7 +48,11 @@ int main() {
         }
     }
 
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
     std::cout << "buyCount = " << buyCount << std::endl;
+    std::cout << "Time taken by Zero-Copy: " << duration << " microseconds." << std::endl;
 
     munmap(data, fileSize);
     close(fd);
