@@ -32,7 +32,19 @@ int main() {
    
     std::cout << "Successfully mapped " << fileSize << " bytes." << std::endl;
 
-    //close fd and unmap memory when done (next time)
+    int buyCount = 0;
+
+    // stop 4 bytes early to look ahead for "54=1" and not read out of bound
+    for (size_t i = 0; i < fileSize - 4; ++i) {
+        if (data[i] == '5' && data[i+1] == '4' && data[i+2] == '=' && data[i+3] == '1') {
+            buyCount++;
+            i += 3; // Skip the characters that matched
+        }
+    }
+
+    std::cout << "buyCount = " << buyCount << std::endl;
+
+    //close fd and unmap memory when done 
 
     return 0;
 }
