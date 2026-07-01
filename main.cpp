@@ -17,9 +17,9 @@ inline int64_t parse_price(const char*& ptr) {
     
     int64_t cents = 0;
     if (*ptr == '.') {
-        ptr++; // Skip the decimal point '.'
+        ptr++; 
         
-        // Parse exactly two decimal places for cents
+        //Parse exactly two decimal places for cents
         if (*ptr >= '0' && *ptr <= '9') {
             cents = (*ptr - '0') * 10;
             ptr++;
@@ -81,19 +81,19 @@ int main() {
     const char* endPtr = data + fileSize;
 
     while (current < endPtr) {
-        // Look for Tag 54 (Side) -> "54="
+        //Look for Tag 54 (Side) -> "54="
         if (*current == '5' && *(current + 1) == '4' && *(current + 2) == '=') {
             current += 3; 
             char side = *current; 
             
-            // Fast-forward our pointer until we hit Tag 38 (Quantity) -> "38="
+            //Fast-forward our pointer until we hit Tag 38 (Quantity) -> "38="
             while (current < endPtr && !(*current == '3' && *(current + 1) == '8' && *(current + 2) == '=')) {
                 current++;
             }
             current += 3; 
             uint32_t qty = parse_int(current); 
 
-            // Fast-forward our pointer until we hit Tag 44 (Price) -> "44="
+            //Fast-forward our pointer until we hit Tag 44 (Price) -> "44="
             while (current < endPtr && !(*current == '4' && *(current + 1) == '4' && *(current + 2) == '=')) {
                 current++;
             }
