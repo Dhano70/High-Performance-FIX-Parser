@@ -40,11 +40,20 @@ int main() {
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    for (size_t i = 0; i < fileSize - 4; ++i) {
-        if (data[i] == '5' && data[i+1] == '4' && 
-            data[i+2] == '=' && data[i+3] == '1') {
+    const char* current = data;
+    const char* endPtr = data + (fileSize - 4); //stop 4 bytes before the end to prevent overflow
+
+    while (current < endPtr) {
+        if (*current == '5' &&
+            *(current + 1) == '4' &&
+            *(current + 2) == '=' &&
+            *(current + 3) == '1') {
+
             buyCount++;
-            i += 3; // Skip the characters that matched
+            current += 4;
+        }
+        else {
+            current++;
         }
     }
 
