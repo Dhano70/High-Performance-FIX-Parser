@@ -77,21 +77,47 @@ int main() {
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    for (size_t i = 0; i < fileSize - 4; ) {
-        if (data[i] == '5' && data[i+1] == '4' && 
-            data[i+2] == '=' && data[i+3] == '1') {
-            buyCount++;
-            i += 4; // Jump completely past "54=1"
-        } else {
-            i++; // Regular 1-byte slide
+   const char* current = data;
+    const char* endPtr = data + fileSize;
+
+    while (current < endPtr) {
+        // Look for Tag 54 (Side) -> "54="
+        if (*current == '5' && *(current + 1) == '4' && *(current + 2) == '=') {
+            current += 3; 
+            char side = *current; 
+            
+            // Fast-forward our pointer until we hit Tag 38 (Quantity) -> "38="
+            while (current < endPtr && !(*current == '3' && *(current + 1) == '8' && *(current + 2) == '=')) {
+                current++;
+            }
+            current += 3; 
+            uint32_t qty = parse_int(current); 
+
+            // Fast-forward our pointer until we hit Tag 44 (Price) -> "44="
+            while (current < endPtr && !(*current == '4' && *(current + 1) == '4' && *(current + 2) == '=')) {
+                current++;
+            }
+            current += 3; 
+            int64_t price = parse_price(current); 
+
+            if (side == '1') {
+                totalBuyVolume += qty;
+            } else if (side == '2') {
+                totalSellVolume += qty;
+            }
+            totalNotionalValue += (price * qty);
         }
+        current++;
     }
 
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
-    std::cout << "buyCount = " << buyCount << std::endl;
-    std::cout << "Time taken by Zero-Copy: " << duration << " microseconds." << std::endl;
+    std::cout << "HFT Engine Summary" << std::endl;
+    std::cout << "Total Buy Volume: " << totalBuyVolume << " shares" << std::endl;
+    std::cout << "Total Sell Volume: " << totalSellVolume << " shares" << std::endl;
+    std::cout << "Total Notional Value: €" << std::fixed << (totalNotionalValue / 100.0) << std::endl;
+    std::cout << "Time taken: " << duration << " microseconds." << std::endl;
 
     munmap(data, fileSize);
     close(fd);
