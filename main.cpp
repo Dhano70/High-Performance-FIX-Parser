@@ -6,6 +6,17 @@
 #include <unistd.h>
 #include <chrono>
 
+/* Helper functions */
+
+inline uint32_t parse_int(const char*& ptr) {
+    uint32_t val = 0;
+    while (*ptr >= '0' && *ptr <= '9') {
+        val = val * 10 + (*ptr - '0');
+        ptr++;
+    }
+    return val;
+}
+
 int main() {
     int fd = open("test_data.txt", O_RDONLY);
     if(fd == -1){
