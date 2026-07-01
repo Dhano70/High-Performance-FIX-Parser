@@ -71,7 +71,9 @@ int main() {
 
     std::cout << "Successfully mapped " << fileSize << " bytes." << std::endl;
 
-    int buyCount = 0;
+    uint64_t totalBuyVolume = 0;
+    uint64_t totalSellVolume = 0;
+    int64_t totalNotionalValue = 0;
 
     auto start = std::chrono::high_resolution_clock::now();
 
