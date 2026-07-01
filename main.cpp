@@ -40,19 +40,13 @@ int main() {
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    const char* current = data;
-    const char* endPtr = data + (fileSize - 4); //stop 4 bytes before the end to prevent overflow
-
-    while (current < endPtr) {
-        //grab 4 bytes at once from the pointer and treat them as a single 32-bit number
-        uint32_t pattern = *reinterpret_cast<const uint32_t*>(current);
-
-        // 0x313D3435 is "54=1" backwards (Little-Endian)
-        if (pattern == 0x313D3435) {
+    for (size_t i = 0; i < fileSize - 4; ) {
+        if (data[i] == '5' && data[i+1] == '4' && 
+            data[i+2] == '=' && data[i+3] == '1') {
             buyCount++;
-            current += 4; 
+            i += 4; // Jump completely past "54=1"
         } else {
-            current++; 
+            i++; // Regular 1-byte slide
         }
     }
 
