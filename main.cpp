@@ -41,6 +41,19 @@ inline uint32_t parse_int(const char*& ptr) {
     return val;
 }
 
+//Order book
+struct PriceLevel {
+    uint64_t totalVolume = 0;
+    uint32_t orderCount = 0;
+};
+
+const int MIN_PRICE = 850;
+const int MAX_PRICE = 950;
+const int PRICE_LEVELS = (MAX_PRICE - MIN_PRICE) + 1;
+
+PriceLevel bidBook[PRICE_LEVELS]; 
+PriceLevel askBook[PRICE_LEVELS];
+
 int main() {
     int fd = open("test_data.txt", O_RDONLY);
     if(fd == -1){
@@ -106,8 +119,24 @@ int main() {
                 totalSellVolume += qty;
             }
             totalNotionalValue += (price * qty);
+
+            /* Order Book */
+            int wholeDollarPrice = price / 100;
+
+            if (wholeDollarPrice >= MIN_PRICE && wholeDollarPrice <= MAX_PRICE) {
+                int index = wholeDollarPrice - MIN_PRICE;
+                if (side == '1') {
+                    bidBook[index].totalVolume += qty;
+                    bidBook[index].orderCount++;
+                } else if (side == '2') {
+                    askBook[index].totalVolume += qty;
+                    askBook[index].orderCount++;
+                }
+            }
         }
-        current++;
+        else {
+            current++;
+        }
     }
 
     auto end = std::chrono::high_resolution_clock::now();
