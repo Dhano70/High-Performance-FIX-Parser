@@ -44,16 +44,15 @@ int main() {
     const char* endPtr = data + (fileSize - 4); //stop 4 bytes before the end to prevent overflow
 
     while (current < endPtr) {
-        if (*current == '5' &&
-            *(current + 1) == '4' &&
-            *(current + 2) == '=' &&
-            *(current + 3) == '1') {
+        //grab 4 bytes at once from the pointer and treat them as a single 32-bit number
+        uint32_t pattern = *reinterpret_cast<const uint32_t*>(current);
 
+        // 0x313D3435 is "54=1" backwards (Little-Endian)
+        if (pattern == 0x313D3435) {
             buyCount++;
-            current += 4;
-        }
-        else {
-            current++;
+            current += 4; 
+        } else {
+            current++; 
         }
     }
 
