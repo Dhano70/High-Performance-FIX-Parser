@@ -8,12 +8,36 @@
 
 /* Helper functions */
 
+inline int64_t parse_price(const char*& ptr) {
+    int64_t dollars = 0;
+    while (*ptr >= '0' && *ptr <= '9') {
+        dollars = dollars * 10 + (*ptr - '0');
+        ptr++;
+    }
+    
+    int64_t cents = 0;
+    if (*ptr == '.') {
+        ptr++; // Skip the decimal point '.'
+        
+        // Parse exactly two decimal places for cents
+        if (*ptr >= '0' && *ptr <= '9') {
+            cents = (*ptr - '0') * 10;
+            ptr++;
+        }
+        if (*ptr >= '0' && *ptr <= '9') {
+            cents += (*ptr - '0');
+            ptr++;
+        }
+    }
+    return (dollars * 100) + cents;
+}
+
 inline uint32_t parse_int(const char*& ptr) {
     uint32_t val = 0;
     while (*ptr >= '0' && *ptr <= '9') {
         val = val * 10 + (*ptr - '0');
         ptr++;
-    }
+    } 
     return val;
 }
 
